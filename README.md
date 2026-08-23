@@ -23,6 +23,6 @@ Se ejecuta el .exe y el programa funcionará automáticamente. Para pararlo, se 
 
 ## Desarrollo:
 Se crea el .exe utilizando PyInstaller:
-´´´bash
+```bash
 python -m PyInstaller .\main.py --onefile
-´´´
+```
