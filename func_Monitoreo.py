@@ -14,33 +14,33 @@ from func_CompararLecturaArchivoCSV import CompararLecturaArchivoCSV
 def Monitoreo(plc):
     # 1. Avisa al usuario que el Monitoreo ha iniciado y la instrucción para detenerlo:
     print('El Monitoreo ha iniciado.\nPara detener pulsa Ctrl + C.')
-    # 1. Se obtiene el primer estado de todas las celdas:
+    # 2. Se obtiene el primer estado de todas las celdas:
     PrimerEstadoTodasCeldas, FechaPrimerEstado, HoraPrimerEstado = ObtenerPrimerEstadoTodasCeldas(plc)
-    # 2. Esta primera lectura se guarda en un archivo .csv:
+    # 3. Esta primera lectura se guarda en un archivo .csv:
     nombreArchivoCSV = CrearArchivoCSVPrimeraLectura(PrimerEstadoTodasCeldas, FechaPrimerEstado, HoraPrimerEstado)
-    # Los pasos 3 a 5 se repetirán continuamente hasta que ocurra una interrupción presionando Ctrl+C.
+    # Los pasos 4 a 6 se repetirán continuamente hasta que ocurra una interrupción presionando Ctrl+C.
     try:        
         while True:
-            # 3. Se espera un tiempo de muestreo propuesto de 50ms:
+            # 4. Se espera un tiempo de muestreo propuesto de 50ms:
             time.sleep(.050)
-            # 4. Se obtiene el estado de todas las celdas:
+            # 5. Se obtiene el estado de todas las celdas:
             EstadoTodasCeldas = ObtenerEstadoTodasCeldas(plc)
-            # 5. Esta lectura se compara con la última guardada en el archivo .csv y decide si agregarla al registro o no:
+            # 6. Esta lectura se compara con la última guardada en el archivo .csv y decide si agregarla al registro o no:
             CompararLecturaArchivoCSV(nombreArchivoCSV, EstadoTodasCeldas)
     # Al detectar la interrupción:
     except KeyboardInterrupt:
-        # 6. Avisa al usuario que el monitoreo está finalizando:
+        # 7. Avisa al usuario que el monitoreo está finalizando:
         print(f'[{datetime.now().strftime("%d-%b-%Y %H:%M:%S.%f")[:-3]}] Finalizando Monitoreo...')
-        # 7. Se desconecta la comunicación al PLC y vuelve a conectar. 
+        # 8. Se desconecta la comunicación al PLC y vuelve a conectar. 
         # Esto para dar solución al error `Invalid TPTK version :2` presente en pruebas realizadas.
         plc.disconnect()
         plc.connect('192.168.0.1', 0, 1)
         # En caso de realizar la reconexión nuevamente de manera correcta:
         if plc.get_connected():
             try:
-                # 8. Se obtiene el estado de las celdas por última vez:
+                # 9. Se obtiene el estado de las celdas por última vez:
                 EstadoTodasCeldas = ObtenerEstadoTodasCeldas(plc)
-                # 9. Se realiza la comparación por última vez:
+                # 10. Se realiza la comparación por última vez:
                 CompararLecturaArchivoCSV(nombreArchivoCSV, EstadoTodasCeldas)
             # En caso de presentar algún error en la lectura del DB:
             except Exception as error_lectura:
@@ -49,7 +49,7 @@ def Monitoreo(plc):
         # En caso de fallar la reconexión: 
         else:
             print("Falló la reconexión (el PLC rechazó la petición o está apagado).")
-        # 10. Avisa al usuario que el monitoreo ha finalizado:
+        # Avisa al usuario que el monitoreo ha finalizado:
         print(f'[{datetime.now().strftime("%d-%b-%Y %H:%M:%S.%f")[:-3]}] El Monitoreo ha finalizado.')
 
 # Entorno de pruebas con la función:    
