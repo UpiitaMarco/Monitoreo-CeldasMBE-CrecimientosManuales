@@ -16,6 +16,7 @@ Programa en Python que realiza el Monitoreo del movimiento de las celdas del Lab
         7. Manganeso
         8. Silicio
         9. Magnesio
+    
     Dichos registros son evaluados con la última lectura para guardar únicamente los eventos nuevos.
 
 ## Funcionamiento:
